@@ -10,6 +10,12 @@ class TransferModel(BaseModel):
     pass
 
 
+class InitiateTransferModel(BaseModel):
+    receiver_acc_number: str
+    amount: Decimal
+    description: Optional[str] = None
+
+
 class CreateTransactionModel(BaseModel):
     sender_uid: Optional[uuid.UUID] = None
     receiver_uid: Optional[uuid.UUID] = None
@@ -19,9 +25,14 @@ class CreateTransactionModel(BaseModel):
     description: Optional[str] = None
 
 
+class ConfirmTransferModel(BaseModel):
+    transaction_uid: uuid.UUID
+    pin: str
+
+
 class TransactionPublic(BaseModel):
     uid: uuid.UUID
-    role: str  # "sent" or "received"
+    role: str
     counterparty: str
     amount: Decimal
     transfer_type: str
