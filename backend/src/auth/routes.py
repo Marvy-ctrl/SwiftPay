@@ -120,9 +120,14 @@ async def user_login(
     password = login_data.password
     user = await user_service.get_user_by_account_number(account_number, session)
 
+    if len(account_number) != 10:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Account number must be 10 digits",
+        )
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
         )
     valid_password = verify_password(password, user.password_hash)
 
@@ -141,19 +146,32 @@ async def user_login(
             refresh=True,
             expiry=timedelta(days=REFRESH_TOKEN_EXPIRY),
         )
-        return JSONResponse(
+        response = JSONResponse(
             content={
                 "message": "Login Successful",
                 "user": {
                     "account_number": user.account_number,
                     "uid": str(user.uid),
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "username": user.username,
+                    "balance": float(user.balance),
+                    "email": user.email,
                 },
                 "access_token": access_token,
-                "refresh_token": refresh_token,
             }
         )
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="lax",
+        )
+
+        return response
     raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect details"
+        status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
     )
 
 

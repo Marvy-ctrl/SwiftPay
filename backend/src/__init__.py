@@ -8,6 +8,7 @@ from src.auth.routes import auth_router
 from src.users.routes import user_router
 from src.transactions.routes import transactions_router
 from src.lucky_draw.routes import draw_router
+from src.middleware import register_middleware
 
 
 @asynccontextmanager
@@ -27,6 +28,8 @@ app = FastAPI(
     lifespan=life_span,
 )
 templates = Jinja2Templates(directory="src/templates")
+
+register_middleware(app)
 
 
 app.include_router(auth_router, prefix=f"/api/{version}/auth", tags=["auth"])
