@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { json, string, z, ZodType } from "zod";
@@ -14,6 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useUser } from "@/contexts/UserContext";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 const loginSchema = z.object({
   account_number: z
@@ -36,6 +37,8 @@ type FormData = z.infer<typeof loginSchema>;
 const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
 
 export default function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const { showSnackbar } = useSnackbar();
   const { setUser, setAccessToken } = useUser();
   const router = useRouter();
@@ -123,10 +126,10 @@ export default function LoginForm() {
               )}
             </div>
 
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start relative">
               <label className="text-sm font-medium mb-1">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 {...register("password")}
                 placeholder="Enter your password"
                 className="w-full border border-cyan-900 rounded-md px-3 py-2 "
@@ -136,6 +139,12 @@ export default function LoginForm() {
                   {errors.password.message}
                 </p>
               )}
+              <button
+                className="absolute top-9 right-3 flex items-center text-gray-600"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </button>
             </div>
 
             <button

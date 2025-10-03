@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { email, string, z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 const signupSchema = z
   .object({
@@ -58,6 +59,9 @@ const signup = async (data: SignUpdata) => {
 };
 
 export default function SignUpForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPin, setShowPin] = useState(false);
   const mutation = useMutation({
     mutationFn: signup,
     onSuccess: (data) => {
@@ -150,10 +154,10 @@ export default function SignUpForm() {
               )}
             </div>
 
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start relative">
               <label className="text-sm font-medium mb-1">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 {...register("password")}
                 placeholder="Enter your password"
                 className="w-full border border-cyan-900 rounded-md px-3 py-2 "
@@ -163,13 +167,20 @@ export default function SignUpForm() {
                   {errors.password.message}
                 </p>
               )}
+              <button
+                type="button"
+                className="absolute top-9 right-3.5"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </button>
             </div>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start relative">
               <label className="text-sm font-medium mb-1">
                 Confirm Password
               </label>
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 {...register("confirm_password")}
                 placeholder="Confirm password"
                 className="w-full border border-cyan-900 rounded-md px-3 py-2 "
@@ -179,12 +190,19 @@ export default function SignUpForm() {
                   {errors.confirm_password.message}
                 </p>
               )}
+              <button
+                type="button"
+                className="absolute top-9 right-3.5"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+              </button>
             </div>
 
-            <div className="flex flex-col items-start">
-              <label className="text-sm font-medium mb-1">Password</label>
+            <div className="flex flex-col items-start relative">
+              <label className="text-sm font-medium mb-1">Pin</label>
               <input
-                type="password"
+                type={showPin ? "text" : "password"}
                 {...register("pin")}
                 placeholder="Enter your pin"
                 className="w-full border border-cyan-900 rounded-md px-3 py-2 "
@@ -194,6 +212,13 @@ export default function SignUpForm() {
                   {errors.pin.message}
                 </p>
               )}
+              <button
+                type="button"
+                className="absolute right-3.5 top-9"
+                onClick={() => setShowPin(!showPin)}
+              >
+                {showPin ? <FaEye /> : <FaEyeSlash />}
+              </button>
             </div>
 
             <button

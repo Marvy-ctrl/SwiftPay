@@ -1,10 +1,10 @@
 import React from "react";
-import UserGreeting from "@/components/dashboard/user-greeting";
+import DashboardComponent from "@/components/dashboard/dashboard-component";
 
 export default function DashboardPage() {
   return (
     <div>
-      <UserGreeting />
+      <DashboardComponent />
     </div>
   );
 }

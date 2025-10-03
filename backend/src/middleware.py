@@ -8,7 +8,7 @@ def register_middleware(app: FastAPI):
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[Config.FRONTEND_URL],
+        allow_origins=[Config.FRONTEND_URL, "http://192.168.0.23:3001"],
         allow_methods=["*"],
         allow_headers=["*"],
         allow_credentials=True,
@@ -20,5 +20,6 @@ def register_middleware(app: FastAPI):
             "localhost",
             "127.0.0.1",
             "localhost:3000",
+            "localhost:3001",
         ],
     )
