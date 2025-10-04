@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { ReactNode } from "react";
-import { useUser } from "@/contexts/UserContext";
 import { redirect } from "next/navigation";
+import { useUser } from "@/contexts/UserContext";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -21,10 +21,11 @@ interface DashboardLayoutProps {
   children: ReactNode;
 }
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  //   const { accessToken, user } = useUser();
-  //   if (!user && !accessToken) {
-  //     redirect("/login");
-  //   }
+  const { accessToken, user } = useUser();
+
+  if (!user && !accessToken) {
+    redirect("/login");
+  }
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -57,7 +58,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   return (
-    <div className="flex h-screen text-black ">
+    <div className="flex min-h-screen text-black ">
       <aside
         className="hidden md:block md:basis-[15%] bg-white shadow-[2px_0_4px_0_rgba(0,0,0,0.1)] relative z-10
 "
@@ -111,7 +112,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </aside>
 
-      <main className="basis-[100%] md:basis-[85%] bg-white p-6 text-black">
+      <main className="basis-[100%] md:basis-[85%] bg-white p-4 md:p-6 text-black">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden mb-4 flex absolute left-3 top-7 "
@@ -173,7 +174,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
           </div>
         )}
-        <div className="px-6">{children}</div>
+        <div className="h-full">{children}</div>
       </main>
     </div>
   );

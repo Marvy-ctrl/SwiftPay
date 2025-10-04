@@ -1,7 +1,5 @@
 import React from "react";
 
-function TransactionPage() {
-  return <div>TransactionPage</div>;
+export default function TransactionsPage() {
+  return <div>TransactionsPage</div>;
 }
-
-export default TransactionPage;
