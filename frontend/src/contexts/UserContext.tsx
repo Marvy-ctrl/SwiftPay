@@ -32,6 +32,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshToken = async (): Promise<string> => {
     const res = await fetch(`${BASE_URL}/auth/refresh_token`, {
+      method: "POST",
       credentials: "include",
     });
     if (!res.ok) throw new Error("Failed to refresh token");
@@ -49,9 +50,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setAuthContext({ getAccessToken, refreshToken, clearUser });
   }, [accessToken]);
-  useEffect(() => {
-    console.log("UserProvider mounted", { user, accessToken });
-  }, []);
 
   const value = { user, accessToken, setUser, setAccessToken };
 

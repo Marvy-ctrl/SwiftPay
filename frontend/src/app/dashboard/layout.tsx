@@ -23,9 +23,9 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { accessToken, user } = useUser();
 
-  if (!user && !accessToken) {
-    redirect("/login");
-  }
+  // if (!user && !accessToken) {
+  //   redirect("/login");
+  // }
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 

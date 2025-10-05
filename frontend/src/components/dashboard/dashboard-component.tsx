@@ -82,8 +82,15 @@ export default function DashboardComponent() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-7 h-full gap-4">
-        <div className=" min-h-96 rounded-2xl md:col-span-4 text-black">
-          <h1 className="text-2xl font-medium mb-4">Recent Transactions</h1>
+        <div className=" min-h-96 md:col-span-4 text-black ">
+          <div className="flex justify-between">
+            <h1 className="text-2xl font-medium mb-4">Recent Transactions</h1>
+            <Link href={"/dashboard/transactions"}>
+              <button className="text-[16px] font-medium mb-4 underline mt-2 ">
+                See All
+              </button>
+            </Link>
+          </div>
         </div>
 
         <div className="  flex justify-center md:col-span-3">
