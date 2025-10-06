@@ -14,6 +14,7 @@ class UserCreateModel(BaseModel):
     last_name: str
     email: EmailStr
     username: str
+    # mobile_number: str
     # password: str = Field(
     #     ...,
     #     pattern=password_regex,

@@ -43,9 +43,17 @@ export default function DashboardComponent() {
 
   return (
     <div className="h-full">
-      <div className="text-[16px] font-semibold mb-6 ">
-        Hi, {user?.username.toUpperCase()}
+      <div className="flex justify-between space-x-3 mb-6">
+        <div className="text-[16px] font-semibold pt-2 md:pt-0 pl-8 md:pl-0">
+          Hi, {user?.username.toUpperCase()}
+        </div>
+        <Link href={"/dashboard/profile"}>
+          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-2xl font-bold text-cyan-950">
+            {user?.username.charAt(0)}
+          </div>
+        </Link>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-7 gap-6 mb-8">
         <div className="bg-gray-100 shadow-[2px_0_4px_0_rgba(0,0,0,0.1)] relative z-10 rounded-2xl md:col-span-5  text-black p-6">
           <h1 className="text-2xl font-medium mb-4">Balance</h1>

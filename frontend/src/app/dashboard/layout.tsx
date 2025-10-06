@@ -174,7 +174,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
           </div>
         )}
-        <div className="h-full">{children}</div>
+        <div className="h-full ">{children}</div>
       </main>
     </div>
   );

@@ -1,4 +1,4 @@
-import SendMoney from "@/components/send-money";
+import SendMoney from "@/components/send-money/send-money";
 import React from "react";
 
 function SendMoneyPage() {

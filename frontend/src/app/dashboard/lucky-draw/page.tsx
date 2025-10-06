@@ -1,7 +1,7 @@
 import React from "react";
-
+import LuckyDraw from "@/components/luxky-draw";
 function LuckyDrawPage() {
-  return <div>LuckyDrawPage</div>;
+  return <LuckyDraw />;
 }
 
 export default LuckyDrawPage;
