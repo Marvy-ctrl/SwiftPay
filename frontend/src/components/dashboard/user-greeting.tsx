@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/hooks/useUser";
 import { formatCurrency } from "../../../utils/main";
 
 export default function UserGreeting() {
-  const { user } = useUser();
+  const { data: user } = useUser();
 
   return (
     <main className="">

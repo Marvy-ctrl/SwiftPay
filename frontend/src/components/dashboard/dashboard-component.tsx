@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import UserGreeting from "./user-greeting";
-import { useUser } from "@/contexts/UserContext";
 import { redirect } from "next/navigation";
 import { formatCurrency } from "../../../utils/main";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { CiCreditCard2 } from "react-icons/ci";
 import { FaGift } from "react-icons/fa";
 import { Chart } from "react-google-charts";
+import { useUser } from "@/hooks/useUser";
 
 const data = [
   ["Categories", "categories"],
@@ -39,7 +39,7 @@ export const options = {
 export default function DashboardComponent() {
   const [showBalance, setShowBalance] = useState(false);
 
-  const { user } = useUser();
+  const { data: user } = useUser();
 
   return (
     <div className="h-full">

@@ -19,6 +19,7 @@ from .utils import (
     create_access_token,
     decode_url_safe_token,
     generate_password_hash,
+    decode_token,
 )
 from src.db.redis import add_jti_to_blacklist, token_in_blocklist
 from src.mail import mail, create_message
@@ -31,6 +32,7 @@ from src.auth.dependencies import (
 from src.templates.welcome import welcome_email
 from src.templates.verify_email import verify_email
 from src.lucky_draw.service import LuckyDrawService
+from src.config import Config
 
 version = "v1"
 auth_router = APIRouter()
@@ -38,6 +40,8 @@ user_service = UserService()
 luckydraw_service = LuckyDrawService()
 ACCESS_TOKEN_EXPIRY = 3600
 REFRESH_TOKEN_EXPIRY = 86400
+ENV = Config.ENV
+IS_PROD = ENV == "production"
 
 
 @auth_router.post("/register")
@@ -165,7 +169,7 @@ async def user_login(
             key="refresh_token",
             value=refresh_token,
             httponly=True,
-            secure=True,
+            secure=IS_PROD,
             samesite="lax",
         )
 
@@ -188,7 +192,7 @@ async def user_logout(
     )
 
 
-@auth_router.get("/refresh_token")
+@auth_router.post("/refresh_token")
 async def refresh_token(token_details: dict = Depends(RefreshTokenBearer())):
     if not token_details.get("refresh", False):
         raise HTTPException(

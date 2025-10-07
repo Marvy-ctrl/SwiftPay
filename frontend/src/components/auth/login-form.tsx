@@ -1,93 +1,43 @@
 "use client";
 
 import React, { useState } from "react";
-
 import { useForm } from "react-hook-form";
-import { json, string, z, ZodType } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-
-import { useMutation } from "@tanstack/react-query";
-
-import { useSnackbar } from "@/contexts/SnackbarContext";
-import { useUser } from "@/contexts/UserContext";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import { useLogin } from "@/hooks/useLogin";
 
 const loginSchema = z.object({
   account_number: z
     .string()
     .max(10)
     .min(10, { message: "Account number must be exactly 10 digits" }),
-
   password: z.string().min(8, {
     message:
-      "Password must have atleast 6 characters with one uppercase, one lowercase one digit and one special character",
+      "Password must have at least 8 characters including uppercase, lowercase, digit, and special character",
   }),
 });
 
-interface LoginData {
+type FormData = z.infer<typeof loginSchema>;
+
+export interface LoginData {
   account_number: string;
   password: string;
 }
 
-type FormData = z.infer<typeof loginSchema>;
-const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
-
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const { mutate: login, isPending } = useLogin();
 
-  const { showSnackbar } = useSnackbar();
-  const { setUser, setAccessToken } = useUser();
-  const router = useRouter();
-
-  const login = async (data: LoginData) => {
-    const response = await fetch(`${BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      showSnackbar(error.detail || "Failed to logged in", "error");
-    }
-
-    const success = await response.json();
-    const user = success.user;
-    const userInfo = {
-      accountNumber: user.account_number,
-      balance: user.balance,
-      email: user.email,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      uid: user.uuid,
-      username: user.username,
-    };
-
-    showSnackbar(success.message, "success");
-    setAccessToken(success.access_token);
-    setUser(userInfo);
-    router.push("/dashboard");
-
-    return success;
-  };
-
-  const mutation = useMutation({
-    mutationFn: login,
-    onSuccess: (data) => {
-      console.log(data);
-    },
-  });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(loginSchema) });
-  const onSubmit = handleSubmit((data) => mutation.mutate(data));
+
+  const onSubmit = handleSubmit((data) => login(data));
 
   return (
     <form onSubmit={onSubmit}>
@@ -112,9 +62,9 @@ export default function LoginForm() {
 
           <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
             <div className="flex flex-col items-start">
-              <label className=" font-medium mb-1">Account Number</label>
+              <label className="font-medium mb-1">Account Number</label>
               <input
-                type="number"
+                type="text"
                 {...register("account_number")}
                 placeholder="Enter your 10-digit account number"
                 className="w-full border border-cyan-900 rounded-md px-3 py-2"
@@ -132,7 +82,7 @@ export default function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 {...register("password")}
                 placeholder="Enter your password"
-                className="w-full border border-cyan-900 rounded-md px-3 py-2 "
+                className="w-full border border-cyan-900 rounded-md px-3 py-2"
               />
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1">
@@ -140,8 +90,9 @@ export default function LoginForm() {
                 </p>
               )}
               <button
+                type="button"
                 className="absolute top-9 right-3 flex items-center text-gray-600"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPassword((prev) => !prev)}
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
@@ -149,10 +100,12 @@ export default function LoginForm() {
 
             <button
               type="submit"
-              className="w-full bg-cyan-950 text-white py-2 rounded-md cursor-pointer"
-              disabled={mutation.isPending}
+              disabled={isPending}
+              className={`w-full bg-cyan-950 text-white py-2 rounded-md cursor-pointer ${
+                isPending ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
-              {mutation.isPending ? "Logging in..." : "Login"}
+              {isPending ? "Logging in..." : "Login"}
             </button>
 
             <div className="mt-2 text-center">

@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     VALIDATE_CERTS: bool = True
     DOMAIN: str
     FRONTEND_URL: str
+    ENV: str
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

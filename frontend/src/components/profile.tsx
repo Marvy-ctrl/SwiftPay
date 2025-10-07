@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
-import { useUser } from "@/contexts/UserContext";
+// import { useUser } from "@/contexts/UserContext";
+import { useUser } from "@/hooks/useUser";
 import { formatCurrency } from "../../utils/main";
 
 export default function ProfilePage() {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const { data: user } = useUser();
 
   return (
     <div className="flex flex-col justify-center items-center min-h-[70vh] md:min-h-[90vh] space-y-6">
