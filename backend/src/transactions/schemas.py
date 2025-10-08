@@ -34,6 +34,8 @@ class TransactionPublic(BaseModel):
     uid: uuid.UUID
     role: str
     counterparty: str
+    detail: Optional[str] = None
+
     amount: Decimal
     transfer_type: str
     status: str

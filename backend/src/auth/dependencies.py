@@ -18,8 +18,19 @@ class TokenBearer(HTTPBearer):
         super().__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request) -> dict:
-        creds = await super().__call__(request)
-        token = creds.credentials
+        # First, try reading from the Authorization header
+        auth = request.headers.get("Authorization")
+        token = None
+        if auth and auth.startswith("Bearer "):
+            token = auth.split(" ")[1]
+        else:
+            # If not found, try getting from cookies
+            token = request.cookies.get("refresh_token")
+
+        if not token:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+            )
 
         token_data = decode_token(token)
         if not token_data:
@@ -30,8 +41,7 @@ class TokenBearer(HTTPBearer):
 
         if "jti" not in token_data or "user" not in token_data:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Malformed token",
+                status_code=status.HTTP_403_FORBIDDEN, detail="Malformed token"
             )
 
         if await token_in_blocklist(token_data["jti"]):

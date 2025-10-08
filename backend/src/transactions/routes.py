@@ -148,16 +148,17 @@ async def fetch_all_transactions(
             if tx.receiver_uid:
                 receiver_info = await get_account_number(tx.receiver_uid, session)
 
-                counterparty = f"{mask_account(receiver_info['account_number'])} ({receiver_info['first_name']} {receiver_info['last_name']})"
+                counterparty = f"Transfer to {receiver_info['first_name']} {receiver_info['last_name']}"
 
             else:
                 counterparty = "LuckyDraw"
 
         else:
             role = "received"
+
             if tx.sender_uid:
                 sender_info = await get_account_number(tx.sender_uid, session)
-                counterparty = f"{mask_account(sender_info['account_number'])} ({sender_info['first_name']} {sender_info['last_name']})"
+                counterparty = f"Received from {sender_info['first_name']} {sender_info['last_name']} "
 
             else:
                 counterparty = "LuckyDraw"
@@ -195,24 +196,34 @@ async def fetch_single_transaction(
         role = "sent"
 
         if transaction.receiver_uid:
+
             receiver_info = await get_account_number(transaction.receiver_uid, session)
-            counterparty = f"{mask_account(receiver_info['account_number'])} ({receiver_info['first_name']} {receiver_info['last_name']})"
+            detail = f"Transfer to {receiver_info['first_name']} {receiver_info['last_name']}"
+
+            counterparty = f" {receiver_info['first_name']} {receiver_info['last_name']} {' '}({mask_account(receiver_info['account_number'])}) "
 
         else:
             counterparty = "LuckyDraw"
+            detail = "LuckyDraw"
 
     else:
         role = "received"
         if transaction.sender_uid:
+
             sender_info = await get_account_number(transaction.sender_uid, session)
-            counterparty = f"{mask_account(sender_info['account_number'])} ({sender_info['first_name']} {sender_info['last_name']})"
+            detail = (
+                f"Received from {sender_info['first_name']} {sender_info['last_name']}"
+            )
+            counterparty = f" {sender_info['first_name']} {sender_info['last_name']} {" "}({mask_account(sender_info['account_number'])}) "
 
         else:
             counterparty = "LuckyDraw"
+            detail = "LuckyDraw"
 
     return TransactionPublic(
         uid=transaction.uid,
         role=role,
+        detail=detail,
         counterparty=counterparty,
         amount=transaction.amount,
         transfer_type=transaction.transfer_type.value,

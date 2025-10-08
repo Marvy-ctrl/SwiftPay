@@ -2,18 +2,14 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import UserGreeting from "./user-greeting";
-import { redirect } from "next/navigation";
 import { formatCurrency } from "../../../utils/main";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { CiCreditCard2 } from "react-icons/ci";
-import { FaGift } from "react-icons/fa";
 import { Chart } from "react-google-charts";
 import { useUser } from "@/hooks/useUser";
 
-const data = [
+const action = [
   ["Categories", "categories"],
-  ["Sent", 10],
+  ["Sent", 20],
   ["Recieved", 10],
   ["Lucky draw", 5],
 ];
@@ -107,7 +103,7 @@ export default function DashboardComponent() {
               chartType="PieChart"
               width="100%"
               height="100%"
-              data={data}
+              data={action}
               options={options}
             />
           </div>

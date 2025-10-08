@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiFetch, setAccesToken as setApiAccessToken } from "@/lib/api";
-import { useAuth } from "@/contexts/AuthContext";
 import { LoginData } from "@/components/auth/login-form";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useRouter } from "next/navigation";

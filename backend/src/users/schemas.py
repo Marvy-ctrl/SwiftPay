@@ -9,7 +9,7 @@ class CurrentUserModel(BaseModel):
     email: EmailStr
     username: str
     account_number: str
-    balance: int
+    balance: float
     is_verified: bool
 
 
