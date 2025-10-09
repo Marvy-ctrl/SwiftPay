@@ -4,34 +4,9 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { formatCurrency } from "../../../utils/main";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { Chart } from "react-google-charts";
 import { useUser } from "@/hooks/useUser";
-
-const action = [
-  ["Categories", "categories"],
-  ["Sent", 20],
-  ["Recieved", 10],
-  ["Lucky draw", 5],
-];
-
-export const options = {
-  title: "My Daily Transactions",
-  pieHole: 0.4,
-  is3D: false,
-  titleTextStyle: {
-    fontSize: 20,
-    bold: true,
-  },
-  legend: {
-    textStyle: {
-      fontSize: 14,
-    },
-  },
-  pieSliceTextStyle: {
-    fontSize: 10,
-    bold: true,
-  },
-};
+import RecentTransactions from "../recent-transactions";
+import ChartComponent from "../chart";
 export default function DashboardComponent() {
   const [showBalance, setShowBalance] = useState(false);
 
@@ -87,26 +62,13 @@ export default function DashboardComponent() {
 
       <div className="grid grid-cols-1 md:grid-cols-7 h-full gap-4">
         <div className=" min-h-96 md:col-span-4 text-black ">
-          <div className="flex justify-between">
-            <h1 className="text-2xl font-medium mb-4">Recent Transactions</h1>
-            <Link href={"/dashboard/transactions"}>
-              <button className="text-[16px] font-medium mb-4 underline mt-2 ">
-                See All
-              </button>
-            </Link>
+          <div className="">
+            <RecentTransactions />
           </div>
         </div>
 
         <div className="  flex justify-center md:col-span-3">
-          <div className="w-full h-[400px] md:h-[500px] text-4xl">
-            <Chart
-              chartType="PieChart"
-              width="100%"
-              height="100%"
-              data={action}
-              options={options}
-            />
-          </div>
+          <ChartComponent />
         </div>
       </div>
     </div>

@@ -7,30 +7,58 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Dialog from "./dialog";
 import { useState } from "react";
 import PinForm from "./pin-form";
+import { useTransfer } from "@/hooks/useTransfer";
+import { useConfirmTransfer } from "@/hooks/useConfirmTransfer";
 
 const sendMoneySchema = z.object({
-  account_number: z
+  receiver_acc_number: z
     .string()
     .max(10)
     .min(10, { message: "Account number must be exactly 10 digits" }),
-  amount: z.string(),
+  amount: z.number(),
   description: z.string().optional(),
 });
 
 type FormData = z.infer<typeof sendMoneySchema>;
 
+export interface transferData {
+  receiver_acc_number: string;
+  amount: number;
+  description?: string;
+}
+
 export default function SendMoney() {
   const [open, setOpen] = useState(false);
+  const { mutate: transfer, isPending } = useTransfer();
+  const { mutate: confirmTransfer } = useConfirmTransfer();
+  const [transferData, setTransferData] = useState<any>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(sendMoneySchema) });
+
+  // const onSubmit = handleSubmit((data) => {
+  //   transfer(data, {
+  //     onSuccess: (response) => {
+  //       // setTransferData(response); // e.g. { transaction_id: 'abc123' }
+  //       setOpen(true);
+  //     },
+  //   });
+  // });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    setOpen(true);
+    transfer(data, {
+      onSuccess: (response) => {
+        setTransferData({ ...data, ...response }); // store form + response
+        setOpen(true);
+      },
+    });
   });
+
+  // const onSubmit = handleSubmit((data) => transfer(data));
+  // setOpen(true);
   const handleClose = () => setOpen(false);
   const handleOk = () => {
     console.log("Payment confirmed!");
@@ -51,13 +79,13 @@ export default function SendMoney() {
             that successful transfers cannot be reversed
           </p>
           <p>
-            <strong>Account Number:</strong> Account
+            <strong>Account Number:</strong> {transferData?.receiver_acc_number}
           </p>
           <p>
-            <strong>Amount:</strong> Amount
+            <strong>Amount:</strong> {transferData?.amount}
           </p>
           <p>
-            <strong>Description:</strong> Desc
+            <strong>Description:</strong> {transferData?.description}
           </p>
           <div className="mt-4 mb-8">
             <PinForm />
@@ -84,13 +112,13 @@ export default function SendMoney() {
             </label>
             <input
               type="text"
-              {...register("account_number")}
+              {...register("receiver_acc_number")}
               placeholder="Enter a valid 10-digit account number"
               className="w-full border border-gray-300 rounded-md px-4 py-3"
             />
-            {errors.account_number && (
+            {errors.receiver_acc_number && (
               <p className="text-red-500 text-xs mt-1">
-                {errors.account_number.message}
+                {errors.receiver_acc_number.message}
               </p>
             )}
           </div>
@@ -101,7 +129,7 @@ export default function SendMoney() {
             </label>
             <input
               type="number"
-              {...register("amount")}
+              {...register("amount", { valueAsNumber: true })}
               placeholder="$10.00 - 500,000.00"
               className="w-full border border-gray-300  rounded-md px-4 py-3 "
             />

@@ -59,9 +59,7 @@ async def create_account(
     new_user = await user_service.create_user(user_data, session)
     token = create_safe_token({"email": user_data.email})
 
-    verification_url = (
-        f"http://localhost:8000/api/{version}/auth/verify_account?token={token}"
-    )
+    verification_url = f"http://localhost:3000/verify-email?token={token}"
 
     html_message = verify_email(user_data.first_name, verification_url)
 

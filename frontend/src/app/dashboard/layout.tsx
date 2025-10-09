@@ -42,27 +42,27 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const navs = [
     {
       name: "Home",
-      href: "/dashboard",
+      href: "",
       icon: <FaHome />,
     },
     {
       name: "Transactions",
-      href: "/dashboard/transactions",
+      href: "/transactions",
       icon: <GrTransaction />,
     },
     {
       name: "Send Money",
-      href: "/dashboard/send-money",
+      href: "/send-money",
       icon: <CiCreditCard2 />,
     },
     {
       name: "Lucky Draw",
-      href: "/dashboard/lucky-draw",
+      href: "/lucky-draw",
       icon: <FaGift />,
     },
     {
       name: "Profile",
-      href: "/dashboard/profile",
+      href: "/profile",
       icon: <BsPersonFill />,
     },
   ];
@@ -118,21 +118,28 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               />
             </div>
             <ul>
-              {navs.map((nav) => (
-                <li className="" key={nav.href}>
-                  <Link
-                    href={nav.href}
-                    className={`flex px-6 py-3 items-center gap-2 cursor-pointer ${
-                      pathname === nav.href
-                        ? "bg-gray-200 text-black"
-                        : "text-gray-500"
-                    } hover:opacity-100`}
-                  >
-                    {nav.icon}
-                    <span>{nav.name}</span>
-                  </Link>
-                </li>
-              ))}
+              {navs.map((nav) => {
+                const fullPath = `/dashboard${nav.href}`;
+
+                const isActive =
+                  nav.href === ""
+                    ? pathname === "/dashboard"
+                    : pathname.startsWith(fullPath);
+
+                return (
+                  <li key={nav.href}>
+                    <Link
+                      href={fullPath}
+                      className={`flex px-6 py-3 items-center gap-2 cursor-pointer ${
+                        isActive ? "bg-gray-200 text-black" : "text-gray-500"
+                      } hover:opacity-100`}
+                    >
+                      {nav.icon}
+                      <span>{nav.name}</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
