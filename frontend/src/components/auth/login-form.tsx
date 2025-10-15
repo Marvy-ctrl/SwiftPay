@@ -54,7 +54,7 @@ export default function LoginForm() {
 
           <h1 className="font-bold text-3xl text-center">Welcome Back</h1>
           <p className="text-gray-500 text-[14px] mb-8 text-center">
-            Don’t have an account yet?{" "}
+            Don't have an account yet?{" "}
             <Link href="/signup" className="text-cyan-900 underline">
               Sign up
             </Link>

@@ -16,8 +16,6 @@ export default function ChartComponent() {
   const creditLength = credit?.length ?? 0;
   const dailyDrawLength = dailyDraw?.length ?? 0;
 
-  console.log({ debitLength, creditLength, dailyDrawLength });
-
   const action = [
     ["Categories", "categories"],
     ["Credit", creditLength],

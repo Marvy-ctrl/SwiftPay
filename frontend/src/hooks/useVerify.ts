@@ -11,10 +11,9 @@ export const useVerifyAccount = (token: string) => {
   return useQuery<VerifyResponse, Error>({
     queryKey: ["verifyAccount", token],
     queryFn: async () => {
-      const res = await apiFetch(
-        `http://localhost:8000/api/v1/auth/verify_account?token=${token}`,
-        { method: "GET" }
-      );
+      const res = await apiFetch(`/auth/verify_account?token=${token}`, {
+        method: "GET",
+      });
 
       if (!res.ok) {
         const error = await res.json();

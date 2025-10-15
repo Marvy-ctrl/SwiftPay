@@ -17,6 +17,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross1 } from "react-icons/rx";
 import LogoutDialog from "@/components/logout-dialog";
 import { useUser } from "@/hooks/useUser";
+import { useLogout } from "@/hooks/useLogout";
+import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -25,19 +27,35 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { data: user, isLoading, isError, error, refetch } = useUser();
   const [open, setOpen] = useState(false);
-
-  const handleClose = () => setOpen(false);
-
-  const handleOk = async () => {
-    console.log("Logged Out Successfully!");
-    setOpen(false);
-  };
-
-  // if (!user) {
-  //   redirect("/login");
-  // }
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
+  const router = useRouter();
+  const { mutate: logout } = useLogout();
+  const handleClose = () => setOpen(false);
+
+  const handleOk = () => {
+    try {
+      logout();
+      setOpen(false);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  if (isLoading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-black text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-black">Loading...</p>
+        </div>
+      </div>
+    );
+
+  if (!user) {
+    redirect("/");
+  }
 
   const navs = [
     {
@@ -155,9 +173,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <IoMdSettings />
               Settings
             </Link>
-
             <button
-              type="submit"
+              // type="submit"
               onClick={() => setOpen(true)}
               className="flex items-center gap-2 px-6 py-3 cursor-pointer"
             >
@@ -166,7 +183,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
           </div>
         </aside>
-
+        {/* mobile screen */}
         <main className="basis-[100%] md:basis-[85%] bg-white p-4 md:p-6 text-black">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -190,22 +207,31 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
 
               <ul className="">
-                {navs.map((nav) => (
-                  <li key={nav.href}>
-                    <Link
-                      href={nav.href}
-                      className={`flex px-6 py-3 items-center gap-2 cursor-pointer ${
-                        pathname === nav.href
-                          ? "bg-gray-200 text-black"
-                          : "text-gray-600"
-                      }`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {nav.icon}
-                      {nav.name}
-                    </Link>
-                  </li>
-                ))}
+                {navs.map((nav) => {
+                  const fullPath = `/dashboard${nav.href}`;
+
+                  const isActive =
+                    nav.href === ""
+                      ? pathname === "/dashboard"
+                      : pathname.startsWith(fullPath);
+
+                  return (
+                    <li key={nav.href}>
+                      <Link
+                        href={fullPath}
+                        className={`flex px-6 py-3 items-center gap-2 cursor-pointer ${
+                          pathname === nav.href
+                            ? "bg-gray-200 text-black"
+                            : "text-gray-600"
+                        }`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {nav.icon}
+                        {nav.name}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
 
               <div className="absolute bottom-6 left-0 w-full px-4">
@@ -222,7 +248,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   Settings
                 </Link>
 
-                <button className="flex items-center gap-2 px-3 py-3 cursor-pointer">
+                <button
+                  onClick={() => setOpen(true)}
+                  className="flex items-center gap-2 px-3 py-3 cursor-pointer"
+                >
                   <RiLogoutBoxRLine />
                   Log out
                 </button>

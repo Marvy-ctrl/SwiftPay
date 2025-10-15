@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
+import { useSnackbar } from "@/contexts/SnackbarContext";
 
 interface ConfirmData {
   transaction_uid: string;
@@ -7,6 +8,7 @@ interface ConfirmData {
 }
 
 export const useConfirmTransfer = () => {
+  const { showSnackbar } = useSnackbar();
   return useMutation({
     mutationFn: async (data: ConfirmData) => {
       const response = await apiFetch("/transactions/transfer/confirm", {
@@ -21,6 +23,19 @@ export const useConfirmTransfer = () => {
       }
 
       return response.json();
+    },
+    onSuccess: (data) => {
+      showSnackbar(
+        data.status === "success"
+          ? "Transfer confirmed successfully"
+          : "Something went wrong",
+        "success",
+        4000
+      );
+    },
+
+    onError: (error: any) => {
+      showSnackbar(error.message || "Transfer failed", "error");
     },
   });
 };

@@ -2,14 +2,46 @@
 import React from "react";
 import DeleteDialog from "./dialog";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useChangeUsername } from "@/hooks/useChangeUsername";
+import UserPasswordChange from "./userpasswordchange";
+import UserPinChange from "./userpinchange";
 
+const usernameSchema = z.object({
+  username: z.string().min(3, { message: "Field is required" }),
+});
+
+type FormData = z.infer<typeof usernameSchema>;
+
+export interface usernameData {
+  username: string;
+}
+
+export interface passwordData {
+  old_password: string;
+  new_password: string;
+}
+
+export interface pinData {
+  old_pin: string;
+  new_pin: string;
+}
 export default function Settings() {
+  const { mutate, isPending } = useChangeUsername();
   const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(usernameSchema) });
+  const onSubmit = handleSubmit((data) => mutate(data));
 
   const handleClose = () => setOpen(false);
 
   const handleOk = async () => {
-    console.log("Account deleted!");
     setOpen(false);
   };
 
@@ -35,101 +67,46 @@ export default function Settings() {
         <div className="w-full max-w-[600px] p-6 space-y-6">
           <h1 className="text-2xl font-bold">Change Username</h1>
           <div>
-            <form action="">
+            <form onSubmit={onSubmit}>
               <label className="block font-semibold text[18px] mb-6">
                 Enter your new Username:
               </label>
               <input
+                {...register("username")}
                 type="text"
                 placeholder="Enter your new username"
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
-              <div className=" mt-6">
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.username.message}
+                </p>
+              )}
+              <div className="mt-3">
                 <button
                   type="submit"
+                  disabled={isPending}
                   className="w-[200px] bg-cyan-900 hover:bg-cyan-800 text-white text-[18px] font-medium rounded-md px-4 py-2"
                 >
-                  Change Username
+                  {isPending ? "Changing..." : "Change Username"}
                 </button>
               </div>
             </form>
           </div>
         </div>
-        <div className="w-full max-w-[600px]  p-6 space-y-6">
-          <h1 className="text-2xl font-bold">Payment Settings</h1>
-          <div>
-            <form>
-              <label className="block font-semibold text[18px] mb-3">
-                Enter your old PIN
-              </label>
-              <div className="mb-4">
-                {" "}
-                <input
-                  type="password"
-                  placeholder="old pin"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2"
-                />
-              </div>
-              <label className="block font-semibold text[18px] mb-3">
-                Enter your new PIN
-              </label>
-              <input
-                type="password"
-                placeholder="new pin"
-                className="w-full border border-gray-300 rounded-md px-4 py-2"
-              />
-            </form>
-          </div>
-          <div className=" mt-6">
-            <button
-              type="submit"
-              className="w-[200px] bg-cyan-900 hover:bg-cyan-800 text-white text-[18px] font-medium rounded-md px-4 py-2"
-            >
-              Change PIN
-            </button>
-          </div>
-        </div>
-        <div className="w-full max-w-[600px]  p-6 space-y-6">
-          <h1 className="text-2xl font-bold">Login Settings</h1>
-          <div>
-            <form action="">
-              <label className="block font-semibold text[18px] mb-3">
-                Enter your old Password:
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your old password"
-                className="w-full border border-gray-300 rounded-md px-4 py-2"
-              />
-              <label className="block font-semibold text[18px] mt-3 mb-3">
-                Enter your new Password:
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your new password"
-                className="w-full border border-gray-300 rounded-md px-4 py-2"
-              />
-              <div className=" mt-6">
-                <button
-                  type="submit"
-                  className="w-[200px] bg-cyan-900 hover:bg-cyan-800 text-white text-[18px] font-medium rounded-md px-4 py-2"
-                >
-                  Change Password
-                </button>
-              </div>
-            </form>
-          </div>
-          <div className="border border-black"></div>
 
-          <div className="space-y-6">
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="w-[200px] bg-red-600 hover:bg-red-500 text-white text-[18px] font-medium rounded-md px-4 py-2"
-            >
-              Delete Account
-            </button>
-          </div>
+        <UserPinChange />
+        <UserPasswordChange />
+        <div className="border border-black"></div>
+
+        <div className="space-y-6">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="w-[200px] bg-red-600 hover:bg-red-500 text-white text-[18px] font-medium rounded-md px-4 py-2"
+          >
+            Delete Account
+          </button>
         </div>
       </div>
     </>

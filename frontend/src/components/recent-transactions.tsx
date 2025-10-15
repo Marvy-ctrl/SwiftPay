@@ -66,6 +66,8 @@ export default function RecentTransactions() {
                       ? "text-green-600"
                       : item.status === "failed"
                       ? "text-red-600"
+                      : item.status === "pending"
+                      ? "text-blue-600"
                       : "text-white"
                   }
                 >

@@ -1,16 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
-import { apiFetch, setAccesToken } from "@/lib/api";
-import { LoginData } from "@/components/auth/login-form";
+import { forgotData } from "@/components/passwords/forgot-password";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { useRouter } from "next/navigation";
+import { apiFetch } from "@/lib/api";
 
-export const useLogin = () => {
+export const usePasswordRequest = () => {
   const { showSnackbar } = useSnackbar();
   const router = useRouter();
 
   return useMutation({
-    mutationFn: async (data: LoginData) => {
-      const res = await apiFetch("/auth/login", {
+    mutationFn: async (data: forgotData) => {
+      const res = await apiFetch("/auth/request_password_reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -18,20 +18,22 @@ export const useLogin = () => {
 
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.detail || "Invalid credentials");
+        throw new Error(error.detail || "Something went wrong");
       }
 
       return res.json();
     },
 
     onSuccess: (data) => {
-      setAccesToken(data.access_token);
-      showSnackbar(data.message || "Login successful", "success");
-      router.push("/dashboard");
+      showSnackbar(data.message || "Password reset link sent!", "success");
+      //   router.push("/check-email");
     },
 
     onError: (error: any) => {
-      showSnackbar(error.message || "Failed to log in", "error");
+      showSnackbar(
+        error.message || "Failed to send password reset link",
+        "error"
+      );
     },
   });
 };

@@ -64,9 +64,7 @@ export default function SignUpForm() {
   const [showPin, setShowPin] = useState(false);
   const mutation = useMutation({
     mutationFn: signup,
-    onSuccess: (data) => {
-      console.log(data);
-    },
+    onSuccess: (data) => {},
   });
   const {
     register,

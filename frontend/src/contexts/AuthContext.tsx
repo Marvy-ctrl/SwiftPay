@@ -1,36 +1,32 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-import { refreshAccessToken } from "@/lib/api";
+import { createContext, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { apiFetch } from "@/lib/api";
 
 type AuthContextType = {
-  accessToken: string | null;
-  setAccessToken: (token: string | null) => void;
   logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
-  accessToken: null,
-  setAccessToken: () => {},
   logout: async () => {},
 });
+
 const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const router = useRouter();
 
   const logout = async () => {
-    await fetch(`${BASE_URL}/auth/logout`, {
+    await apiFetch("/auth/logout", {
       method: "POST",
       credentials: "include",
     });
-    setAccessToken(null);
+    router.push("/");
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, setAccessToken, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ logout }}>{children}</AuthContext.Provider>
   );
 };
 

@@ -17,7 +17,7 @@ from src.templates.debit import debit_alert
 from src.mail import mail, create_message
 from src.auth.routes import user_service
 from datetime import datetime, date
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 from .utils import get_account_number
 
 
@@ -53,7 +53,33 @@ async def transfer_money(
     await session.commit()
     await session.refresh(transaction)
 
-    return {"transaction_id": transaction.uid, "status": "pending"}
+    return {
+        "transaction_uid": transaction.uid,
+        "status": "pending",
+    }
+
+
+@transactions_router.post("/confirm/name")
+async def confirm_name(
+    account_number: str,
+    session: AsyncSession = Depends(get_session),
+    user: User = Depends(get_current_user),
+):
+    account_number = account_number.strip()
+    if account_number == user.account_number:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="You cannot transfer to yourself",
+        )
+
+    name = await transaction_service.confirm_name(account_number, session)
+
+    if not name:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Enter a valid account number"
+        )
+
+    return {"name": name}
 
 
 @transactions_router.post("/transfer/confirm")
@@ -135,8 +161,14 @@ async def fetch_all_transactions(
     session: AsyncSession = Depends(get_session),
 ):
 
-    transactions = select(Transaction).where(
-        or_(Transaction.sender_uid == user.uid, Transaction.receiver_uid == user.uid)
+    transactions = (
+        select(Transaction)
+        .where(
+            or_(
+                Transaction.sender_uid == user.uid, Transaction.receiver_uid == user.uid
+            )
+        )
+        .order_by(desc(Transaction.created_at))
     )
     result = await session.exec(transactions)
     transacts = result.all()

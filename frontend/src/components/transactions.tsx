@@ -37,7 +37,7 @@ export default function Transactions() {
       <h2 className="text-xl font-semibold mb-4">My Transactions</h2>
 
       <div className="">
-        {data.map((item: any) => (
+        {data?.map((item: any) => (
           <Link
             key={item.uid}
             href={`/dashboard/transactions/${item.uid}`}
@@ -81,6 +81,8 @@ export default function Transactions() {
                       ? "text-green-600"
                       : item.status === "failed"
                       ? "text-red-600"
+                      : item.status === "pending"
+                      ? "text-blue-600"
                       : "text-white"
                   }
                 >

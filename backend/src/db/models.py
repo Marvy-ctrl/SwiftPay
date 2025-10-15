@@ -1,8 +1,8 @@
-from sqlmodel import SQLModel, Field, Column, ForeignKey
+from sqlmodel import SQLModel, Field, Column, ForeignKey, Relationship
 import sqlalchemy.dialects.postgresql as pg
 from datetime import datetime, date
 import uuid
-from typing import Optional
+from typing import Optional, List
 from decimal import Decimal
 from enum import Enum
 
@@ -89,7 +89,12 @@ class LuckyDrawStats(SQLModel, table=True):
         sa_column=Column(pg.UUID, primary_key=True, default=uuid.uuid4, nullable=False)
     )
     user_uid: uuid.UUID = Field(
-        sa_column=Column(pg.UUID, ForeignKey("users.uid"), unique=True, nullable=False)
+        sa_column=Column(
+            pg.UUID,
+            ForeignKey("users.uid"),
+            unique=True,
+            nullable=False,
+        )
     )
     draws_left: int = Field(default=2, nullable=False)
     last_draw_date: Optional[date] = None

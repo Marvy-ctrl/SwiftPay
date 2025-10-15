@@ -8,7 +8,7 @@ import { useUser } from "@/hooks/useUser";
 import RecentTransactions from "../recent-transactions";
 import ChartComponent from "../chart";
 export default function DashboardComponent() {
-  const [showBalance, setShowBalance] = useState(false);
+  const [showBalance, setShowBalance] = useState(true);
 
   const { data: user } = useUser();
 

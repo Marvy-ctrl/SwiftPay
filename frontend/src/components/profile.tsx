@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-// import { useUser } from "@/contexts/UserContext";
 import { useUser } from "@/hooks/useUser";
 import { formatCurrency } from "../../utils/main";
 

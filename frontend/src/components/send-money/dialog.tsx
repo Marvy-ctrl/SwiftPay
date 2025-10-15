@@ -1,22 +1,15 @@
 "use client";
-import { useRef, useEffect, JSX } from "react";
+import { useRef, useEffect } from "react";
 import { IoAlertOutline } from "react-icons/io5";
 
 type Props = {
   title: string;
   onClose: () => void;
-  onOk: () => void;
   open: boolean;
   children: React.ReactNode;
 };
 
-export default function Dialog({
-  title,
-  onClose,
-  onOk,
-  open,
-  children,
-}: Props) {
+export default function Dialog({ title, onClose, open, children }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -41,18 +34,12 @@ export default function Dialog({
         </div>
         <div className="px-5 pb-6 mb-6">
           {children}
-          <div className="flex justify-between mt-2">
+          <div className="flex justify-end -mb-0">
             <button
               onClick={onClose}
               className="bg-cyan-900 text-white py-1 px-2 rounded"
             >
               Recheck
-            </button>
-            <button
-              onClick={onOk}
-              className="bg-cyan-900 text-white py-1 px-4 rounded"
-            >
-              Send
             </button>
           </div>
         </div>

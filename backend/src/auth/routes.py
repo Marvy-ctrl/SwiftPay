@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, Request
+from fastapi import APIRouter, Depends, status, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from datetime import timedelta, datetime, timezone
 from .schemas import (
@@ -73,7 +73,7 @@ async def create_account(
     }
 
 
-@auth_router.get("/verify_account/")
+@auth_router.get("/verify_account")
 async def verify_account(token: str, session: AsyncSession = Depends(get_session)):
     try:
         token_data = decode_url_safe_token(token)
@@ -129,7 +129,7 @@ async def user_login(
         )
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
     valid_password = verify_password(password, user.password_hash)
 
@@ -177,7 +177,7 @@ async def user_login(
     )
 
 
-@auth_router.get("/logout")
+@auth_router.post("/logout")
 async def user_logout(
     access_token: dict = Depends(AccessTokenBearer()),
     refresh_token: dict = Depends(RefreshTokenBearer()),
@@ -185,9 +185,13 @@ async def user_logout(
     await add_jti_to_blacklist(access_token["jti"], expiry=ACCESS_TOKEN_EXPIRY)
     await add_jti_to_blacklist(refresh_token["jti"], expiry=REFRESH_TOKEN_EXPIRY)
 
-    return JSONResponse(
-        content={"message": "Logged out successfully"}, status_code=status.HTTP_200_OK
+    response = JSONResponse(
+        content={"message": "Logged out successfully"},
+        status_code=status.HTTP_200_OK,
     )
+    response.delete_cookie("refresh_token")
+
+    return response
 
 
 @auth_router.post("/refresh_token")
@@ -207,7 +211,7 @@ async def refresh_token(token_details: dict = Depends(RefreshTokenBearer())):
 
     if expiry_dt > datetime.now(timezone.utc):
         new_access_token = create_access_token(user_data=token_details["user"])
-        return JSONResponse(content={"New Access Token": new_access_token})
+        return JSONResponse(content={"access token": new_access_token})
 
 
 @auth_router.post("/request_password_reset")
@@ -221,19 +225,18 @@ async def request_password_reset(
             status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found"
         )
     token = create_safe_token({"email": email_data.email})
-    reset_url = (
-        f"http://localhost:8000/api/{version}/auth/password_reset_request?token={token}"
-    )
+    reset_url = f"http://localhost:3000/reset-confirm?token={token}"
+
     html_message = f"""
 
 
     <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
     <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 8px;">
-        <h1 style="color: #4CAF50;">Reset Your Password</h1>
+        <h1 style="color: #164E63;">Reset Your Password</h1>
         <p>Hi {user.first_name},</p>
         <p>We received a request to reset your SwiftPay account password. Click the button below to set a new password:</p>
         <a href='{reset_url}' 
-        style="display: inline-block; background-color: #4CAF50; color: white; 
+        style="display: inline-block; background-color: #164E63; color: white; 
                 padding: 12px 25px; border-radius: 5px; text-decoration: none; margin-top: 20px;">
         Reset Password
         </a>

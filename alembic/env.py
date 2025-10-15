@@ -121,7 +121,8 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
 from sqlmodel import SQLModel
-from src.db.models import User, Transaction, LuckyDraw  # all your models
+from backend.src.db.models import User, Transaction, LuckyDraw  # all your models
+
 
 # Alembic config
 config = context.config

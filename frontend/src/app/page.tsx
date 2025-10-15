@@ -1,10 +1,6 @@
-// import HomePage from "@/components/dashboard/page";
-// export default function Home() {
-//   return <HomePage />;
-// }
-
 import React from "react";
+import HomePage from "@/components/homepage";
 
 export default function Page() {
-  return <div>Page</div>;
+  return <HomePage />;
 }
