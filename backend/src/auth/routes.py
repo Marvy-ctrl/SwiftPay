@@ -39,7 +39,7 @@ auth_router = APIRouter()
 user_service = UserService()
 luckydraw_service = LuckyDrawService()
 ACCESS_TOKEN_EXPIRY = 3600
-REFRESH_TOKEN_EXPIRY = 86400
+REFRESH_TOKEN_EXPIRY = 3
 ENV = Config.ENV
 IS_PROD = ENV == "production"
 
