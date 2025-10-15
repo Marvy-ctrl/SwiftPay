@@ -5,21 +5,21 @@ A seamless digital banking experience with secure accounts, instant transfers, a
 
 ✨ Features
 
-🔐 Authentication: signup, login, logout, password reset, email verification
+. Authentication: signup, login, logout, password reset, email verification
 
-🏦 Account Management: unique account numbers, balance tracking
+. Account Management: unique account numbers, balance tracking
 
-💸 Money Transfers: secure transfers within the system with PIN validation
+. Money Transfers: secure transfers within the system with PIN validation
 
-🎰 Lucky Draw: random prize rewards added to user accounts
+. Lucky Draw: random prize rewards added to user accounts
 
-📊 Dashboard: balance overview, recent transactions, analytics charts
+. Dashboard: balance overview, recent transactions, analytics charts
 
-⚙️ Settings: profile update, password & PIN changes, account deletion
+. Settings: profile update, password & PIN changes, account deletion
 
-📧 Notifications: email alerts for transactions and account events
+. Notifications: email alerts for transactions and account events
 
-🗂️ Database Models
+. Database Models
 
 User → user profiles & authentication
 
@@ -29,7 +29,7 @@ Transaction → logs all money movements
 
 LuckyDraw → logs all lucky draw wins
 
-🚀 API Endpoints
+ API Endpoints
 
 Auth: POST /auth/register, POST /auth/login, POST /auth/logout, POST /auth/request-password-reset, POST /auth/reset-password
 
@@ -41,7 +41,7 @@ Transactions: POST /transactions/transfer, GET /transactions/me, GET /transactio
 
 Lucky Draw: POST /lucky-draw/play, GET /lucky-draw/history
 
-🖥️ Frontend Pages
+ Frontend Pages
 
 Dashboard: balance, account info, last transactions, charts, quick actions
 
@@ -55,7 +55,7 @@ Settings: profile, password & PIN management, account deletion
 
 Auth: signup, login, verification, password reset
 
-⚙️ Setup
+ Setup
 
 Clone the repo
 
