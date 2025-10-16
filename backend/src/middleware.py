@@ -8,7 +8,11 @@ def register_middleware(app: FastAPI):
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[Config.FRONTEND_URL, "http://192.168.0.23:3001"],
+        allow_origins=[
+            Config.FRONTEND_URL,
+            "https://swift-pay-mu.vercel.app",
+            "http://192.168.0.23:3001",
+        ],
         allow_methods=["*"],
         allow_headers=["*"],
         allow_credentials=True,
