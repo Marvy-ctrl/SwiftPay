@@ -16,10 +16,5 @@ def register_middleware(app: FastAPI):
 
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=[
-            "localhost",
-            "127.0.0.1",
-            "localhost:3000",
-            "localhost:3001",
-        ],
+        allowed_hosts=["swiftpay-fow9.onrender.com/", "localhost", "127.0.0.1"],
     )
