@@ -1,6 +1,6 @@
 "use client";
 import { usePasswordConfirm } from "@/hooks/usePasswordConfirm";
-import React from "react";
+import React, { Suspense } from "react";
 import { FaCheck } from "react-icons/fa";
 import PasswordForm from "./passwordreset-form";
 export interface resetData {
@@ -22,7 +22,9 @@ export default function ResetConfirm() {
     <div className="min-h-screen flex items-center justify-center bg-white text-black">
       <div className="bg-gray-50 shadow-md rounded-xl p-8 w-[400px] text-center">
         <div>
-          <PasswordForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <PasswordForm />
+          </Suspense>
         </div>
       </div>
     </div>
