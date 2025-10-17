@@ -97,7 +97,7 @@ export default function Settings() {
 
         <UserPinChange />
         <UserPasswordChange />
-        <div className="border border-black"></div>
+        {/* <div className="border border-black"></div>
 
         <div className="space-y-6">
           <button
@@ -107,7 +107,7 @@ export default function Settings() {
           >
             Delete Account
           </button>
-        </div>
+        </div> */}
       </div>
     </>
   );
