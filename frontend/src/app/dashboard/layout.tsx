@@ -57,6 +57,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     redirect("/");
   }
 
+  if (!user.is_verified) {
+    redirect("/");
+  }
+
   const navs = [
     {
       name: "Home",

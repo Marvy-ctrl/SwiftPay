@@ -131,6 +131,11 @@ async def user_login(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Account number must be 10 digits",
         )
+    if not user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_304_NOT_MODIFIED,
+            detail="You need to verify your account",
+        )
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
