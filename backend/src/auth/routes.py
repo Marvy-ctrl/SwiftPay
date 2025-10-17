@@ -59,7 +59,7 @@ async def create_account(
     new_user = await user_service.create_user(user_data, session)
     token = create_safe_token({"email": user_data.email})
 
-    verification_url = f"http://localhost:3000/verify-email?token={token}"
+    verification_url = f"{Config.FRONTEND_URL}/verify-email?token={token}"
 
     html_message = verify_email(user_data.first_name, verification_url)
 
@@ -167,8 +167,8 @@ async def user_login(
             key="refresh_token",
             value=refresh_token,
             httponly=True,
-            secure=IS_PROD,
-            samesite="lax",
+            secure=True,
+            samesite="None",
         )
 
         return response
@@ -225,7 +225,7 @@ async def request_password_reset(
             status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found"
         )
     token = create_safe_token({"email": email_data.email})
-    reset_url = f"http://localhost:3000/reset-confirm?token={token}"
+    reset_url = f"{Config.FRONTEND_URL}/reset-confirm?token={token}"
 
     html_message = f"""
 

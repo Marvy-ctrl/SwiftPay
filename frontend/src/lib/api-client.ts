@@ -26,12 +26,11 @@ export async function apiClient(endpoint: string, options: RequestInit = {}) {
       ...(options.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    credentials: "include", // send cookies for refresh token
+    credentials: "include",
   };
 
   let response = await fetch(url, fetchOptions);
 
-  // if access token expired -> try refresh
   if ((response.status === 401 || response.status === 403) && authContext) {
     try {
       const newToken = await authContext.refreshToken();
