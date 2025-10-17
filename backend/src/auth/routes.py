@@ -57,18 +57,18 @@ async def create_account(
             detail="User with this email already exists",
         )
     new_user = await user_service.create_user(user_data, session)
-    token = create_safe_token({"email": user_data.email})
+    # token = create_safe_token({"email": user_data.email})
 
-    verification_url = f"{Config.FRONTEND_URL}/verify-email?token={token}"
+    # verification_url = f"{Config.FRONTEND_URL}/verify-email?token={token}"
 
-    html_message = verify_email(user_data.first_name, verification_url)
+    # html_message = verify_email(user_data.first_name, verification_url)
 
-    subject = "Verify your Email"
-    message = create_message([email], subject, html_message)
-    try:
-        await mail.send_message(message)
-    except Exception as e:
-        print("⚠️ Email sending failed:", e)
+    # subject = "Verify your Email"
+    # message = create_message([email], subject, html_message)
+    # try:
+    #     await mail.send_message(message)
+    # except Exception as e:
+    #     print("⚠️ Email sending failed:", e)
     # await mail.send_message(message)
 
     return {
