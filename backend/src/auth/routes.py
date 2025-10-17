@@ -65,6 +65,10 @@ async def create_account(
 
     subject = "Verify your Email"
     message = create_message([email], subject, html_message)
+    try:
+        await mail.send_message(message)
+    except Exception as e:
+        print("⚠️ Email sending failed:", e)
     await mail.send_message(message)
 
     return {
