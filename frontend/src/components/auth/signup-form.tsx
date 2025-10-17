@@ -44,6 +44,7 @@ const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
 const signup = async (data: SignUpdata) => {
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       first_name: data.first_name,
