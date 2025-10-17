@@ -20,7 +20,7 @@ const signupSchema = z
         "Password must have atleast 8 characters with one uppercase, one lowercase one digit and one special character",
     }),
     confirm_password: z.string(),
-    pin: z.string().min(4, {
+    transaction_pin: z.string().min(4, {
       message: "Pin must be 4 digits",
     }),
   })
@@ -34,10 +34,10 @@ type FormData = z.infer<typeof signupSchema>;
 export interface SignUpdata {
   first_name: string;
   last_name: string;
-  email: string;
   username: string;
+  email: string;
   password: string;
-  pin: string;
+  transaction_pin: string;
 }
 
 export default function SignUpForm() {
@@ -183,13 +183,13 @@ export default function SignUpForm() {
               <label className="text-sm font-medium mb-1">Pin</label>
               <input
                 type={showPin ? "text" : "password"}
-                {...register("pin")}
+                {...register("transaction_pin")}
                 placeholder="Enter your pin"
                 className="w-full border border-cyan-900 rounded-md px-3 py-2 "
               />
-              {errors.pin && (
+              {errors.transaction_pin && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors.pin.message}
+                  {errors.transaction_pin.message}
                 </p>
               )}
               <button

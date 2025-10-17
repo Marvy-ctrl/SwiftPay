@@ -24,7 +24,11 @@ export const useSignup = () => {
     },
 
     onSuccess: (data) => {
-      showSnackbar(data.message || "Account created successfully", "success");
+      showSnackbar(
+        data.message ||
+          "Account created successfully, check your email for verification",
+        "success"
+      );
     },
 
     onError: (error: any) => {
