@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { email, string, z, ZodType } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import { useSignup } from "@/hooks/useSignup";
 
 const signupSchema = z
   .object({
@@ -31,7 +31,7 @@ const signupSchema = z
 
 type FormData = z.infer<typeof signupSchema>;
 
-interface SignUpdata {
+export interface SignUpdata {
   first_name: string;
   last_name: string;
   email: string;
@@ -40,39 +40,20 @@ interface SignUpdata {
   pin: string;
 }
 
-const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1`;
-const signup = async (data: SignUpdata) => {
-  const response = await fetch(`${BASE_URL}/auth/register`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      first_name: data.first_name,
-      last_name: data.last_name,
-      email: data.email,
-      username: data.username,
-      password: data.password,
-      transaction_pin: data.pin,
-    }),
-  });
-  if (!response.ok) throw new Error("Error creating account");
-  return response.json();
-};
-
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPin, setShowPin] = useState(false);
-  const mutation = useMutation({
-    mutationFn: signup,
-    onSuccess: (data) => {},
-  });
+  const { mutate: signup, isPending } = useSignup();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(signupSchema) });
-  const onSubmit = handleSubmit((data) => mutation.mutate(data));
+  const onSubmit = handleSubmit((data) =>
+    signup(data, { onSuccess: () => reset() })
+  );
 
   return (
     <form onSubmit={onSubmit}>
@@ -89,7 +70,7 @@ export default function SignUpForm() {
 
           <h1 className="font-bold text-3xl text-center">Welcome Back</h1>
           <p className="text-gray-500 text-[14px] mb-8 text-center">
-            Don’t have an account yet?{" "}
+            Don't have an account yet?{" "}
             <Link href="/login" className="text-cyan-900 underline">
               Sign in
             </Link>
@@ -223,9 +204,9 @@ export default function SignUpForm() {
             <button
               type="submit"
               className="w-full bg-cyan-950 text-white py-2 rounded-md "
-              disabled={mutation.isPending}
+              disabled={isPending}
             >
-              {mutation.isPending ? "Creating your account..." : "Signup"}
+              {isPending ? "Creating your account..." : "Signup"}
             </button>
 
             <div className="mt-2 text-center">

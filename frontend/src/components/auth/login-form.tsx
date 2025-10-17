@@ -34,10 +34,13 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit = handleSubmit((data) => login(data));
+  const onSubmit = handleSubmit((data) =>
+    login(data, { onSuccess: () => reset() })
+  );
 
   return (
     <form onSubmit={onSubmit}>
