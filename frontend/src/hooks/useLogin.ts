@@ -12,6 +12,7 @@ export const useLogin = () => {
     mutationFn: async (data: LoginData) => {
       const res = await apiFetch("/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
