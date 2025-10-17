@@ -69,7 +69,7 @@ async def create_account(
         await mail.send_message(message)
     except Exception as e:
         print("⚠️ Email sending failed:", e)
-    await mail.send_message(message)
+    # await mail.send_message(message)
 
     return {
         "message": "Account Created! Check email to verify your account",
