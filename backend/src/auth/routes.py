@@ -178,7 +178,7 @@ async def user_login(
             httponly=True,
             secure=True,
             samesite="None",
-            domain="swiftpay-fow9.onrender.com",
+            domain=Config.DOMAIN,
         )
 
         return response

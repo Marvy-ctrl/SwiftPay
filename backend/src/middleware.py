@@ -20,5 +20,10 @@ def register_middleware(app: FastAPI):
 
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=["swiftpay-fow9.onrender.com", "localhost", "127.0.0.1"],
+        allowed_hosts=[
+            "swiftpay-fow9.onrender.com",
+            "localhost",
+            "127.0.0.1",
+            "backend-tau-vert.vercel.app/",
+        ],
     )
