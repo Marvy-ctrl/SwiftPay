@@ -178,7 +178,7 @@ async def user_login(
             httponly=True,
             secure=True,
             samesite="None",
-            domain=Config.DOMAIN,
+            domain="backend-tau-vert.vercel.app/",
         )
 
         return response
