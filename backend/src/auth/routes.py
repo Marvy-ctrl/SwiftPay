@@ -169,7 +169,13 @@ async def user_login(
                 "access_token": access_token,
             }
         )
-        print(response)
+        print(
+            {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "account_number": account_number,
+            }
+        )
         response.set_cookie(
             key="refresh_token",
             value=refresh_token,
