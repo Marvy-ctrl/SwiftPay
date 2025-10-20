@@ -3,7 +3,6 @@ __pycache__/
 *$py.class
 
 alembic.ini
-vercel.json
 
 
 *.so
