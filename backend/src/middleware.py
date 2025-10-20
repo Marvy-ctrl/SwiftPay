@@ -11,6 +11,7 @@ def register_middleware(app: FastAPI):
         allow_origins=[
             Config.FRONTEND_URL,
             "https://swift-pay-mu.vercel.app",
+            "https://swiftpay-frontend-jet.vercel.app",
             "http://192.168.0.23:3001",
         ],
         allow_methods=["*"],
