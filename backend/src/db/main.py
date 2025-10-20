@@ -9,7 +9,6 @@ from src.config import Config
 async_engine: AsyncEngine = create_async_engine(
     Config.DATABASE_URL,
     connect_args={"ssl": True},
-    echo=True,
 )
 
 # Create sessionmaker globally
