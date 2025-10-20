@@ -25,6 +25,6 @@ def register_middleware(app: FastAPI):
             "swiftpay-fow9.onrender.com",
             "localhost",
             "127.0.0.1",
-            "backend-tau-vert.vercel.app/",
+            "backend-tau-vert.vercel.app",
         ],
     )
