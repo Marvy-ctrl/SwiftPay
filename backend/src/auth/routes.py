@@ -169,6 +169,7 @@ async def user_login(
                 "access_token": access_token,
             }
         )
+        print(response)
         response.set_cookie(
             key="refresh_token",
             value=refresh_token,
